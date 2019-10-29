@@ -4,7 +4,7 @@ import math as ma
 import random as ra
 
 ENERGY_TOTAL = 10000
-
+# Work on snake
 
 class Snake(pg.sprite.Sprite):
     def __init__(self, behaviors, x, y):
