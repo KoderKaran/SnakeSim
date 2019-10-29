@@ -1,7 +1,7 @@
 import pygame as pg
 
-WINDOW_SIZE = (1000, 800)
-FPS = 100
+WINDOW_SIZE = (1920, 1080)
+FPS = 30
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (46, 139, 87)
