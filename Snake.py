@@ -18,15 +18,18 @@ class Snake(pg.sprite.Sprite):
         self.storage_budget = max(ENERGY_TOTAL - (self.maintenance_budget + self.growth_budget + self.mating_budget), 0)
         self.image = sp.SNAKE_IMG
         self.rect = self.image.get_rect()
-        self.curr_x = x
-        self.curr_y = y
-        self.move_chance = .01
+        self.rect.x = x
+        self.rect.y = y
+        self.move_chance = .15
         self.maint_full = False
         self.reproduction_full = False
 
         # print(self.maintenance_budget + self.growth_budget + self.mating_budget + self.storage_budget)
         # print(self.maintenance_budget, self.growth_budget, self.mating_budget, self.storage_budget )
         # print("\n")
+
+    def eat(self):
+        self.energy_total += 1000
 
     def update(self, dx, dy):
         if not self.reproduction_full:
@@ -37,9 +40,6 @@ class Snake(pg.sprite.Sprite):
             self.move(dx, dy)
 
     def move(self, delta_x, delta_y):
-        new_x = self.curr_x + delta_x
-        new_y = self.curr_y + delta_y
-        self.curr_x = new_x
-        self.curr_y = new_y
-        self.rect.x += new_x
-        self.rect.y += new_y
+        self.rect.x += delta_x
+        self.rect.y += delta_y
+        #self.rect.center = (self.rect.x, self.rect.y)
