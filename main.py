@@ -2,6 +2,8 @@ import pygame as pg
 import random as ra
 import Specs as sp
 import Snake as sn
+import Food as fd
+
 
 pg.init()
 
@@ -13,11 +15,14 @@ clock = pg.time.Clock()
 crashed = False
 
 sprite_snek = pg.sprite.Group()
-snek_list = []
+sprite_sqrl = pg.sprite.Group()
 for i in range(sp.POPULATION_SIZE):
     snek = sn.Snake(["r"], ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT))
     sprite_snek.add(snek)
 
+for i in range(sp.SQRL_POP):
+    sqrl = fd.Squirrel(ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT))
+    sprite_sqrl.add(sqrl)
 
 while not crashed:
     display.fill(sp.GREEN)
@@ -33,8 +38,25 @@ while not crashed:
         #         sprite_snek.update(0, -25)
         #     elif event.key == pg.K_DOWN:
         #         sprite_snek.update(0, 25)
+    for i in sprite_snek:
+        i.update(ra.randint(-5, 5), ra.randint(-5, 5))
 
-    sprite_snek.update(ra.randint(-5, 5), ra.randint(-5, 5))
+    for i in sprite_sqrl:
+        i.update(ra.randint(-1, 1), ra.randint(-1, 1))
+
+    for snake in pg.sprite.groupcollide(sprite_snek, sprite_sqrl, 0, 1).keys():
+       # print("Energy before: " + str(snake.energy_total))
+        snake.eat()
+       # print("Energy after: " + str(snake.energy_total))
+
+    for sqrl in pg.sprite.groupcollide(sprite_sqrl, sprite_sqrl, 0, 0).keys():
+        if len(sprite_sqrl) < sp.SQRL_POP:
+            chance = ra.uniform(0, 1)
+            if chance <= sp.SQRL_MATE_CHANCE:
+                sqrl = fd.Squirrel(sqrl.rect.x, sqrl.rect.y)
+                sprite_sqrl.add(sqrl)
+                print(len(sprite_sqrl))
+
     for i in sprite_snek:
         if i.rect.x < 0:
             i.rect.x = 0
@@ -45,7 +67,18 @@ while not crashed:
         if i.rect.y > sp.HEIGHT - 25:
             i.rect.y = sp.HEIGHT - 25
 
+    for i in sprite_sqrl:
+        if i.rect.x < 0:
+            i.rect.x = 0
+        if i.rect.x > sp.WIDTH - 15:
+            i.rect.x = sp.WIDTH - 15
+        if i.rect.y < 0:
+            i.rect.y = 0
+        if i.rect.y > sp.HEIGHT - 15:
+            i.rect.y = sp.HEIGHT - 15
+
     sprite_snek.draw(display)
+    sprite_sqrl.draw(display)
 
 
     pg.display.update()
