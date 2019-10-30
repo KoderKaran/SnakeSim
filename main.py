@@ -17,29 +17,36 @@ crashed = False
 sprite_snek = pg.sprite.Group()
 sprite_sqrl = pg.sprite.Group()
 for i in range(sp.POPULATION_SIZE):
-    snek = sn.Snake(["r"], ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT))
+    snek = sn.Snake(display, ["r"], ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT))
     sprite_snek.add(snek)
 
 for i in range(sp.SQRL_POP):
-    sqrl = fd.Squirrel(ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT))
+    sqrl = fd.Squirrel(display, ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT), i)
     sprite_sqrl.add(sqrl)
+
+sqrl_count = 1
 
 while not crashed:
     display.fill(sp.GREEN)
     for event in pg.event.get():
         if event.type == pg.QUIT:
             crashed = True
-        # if event.type == pg.KEYDOWN:
-        #     if event.key == pg.K_LEFT:
-        #         sprite_snek.update(-25, 0)
-        #     elif event.key == pg.K_RIGHT:
-        #         sprite_snek.update(25, 0)
-        #     elif event.key == pg.K_UP:
-        #         sprite_snek.update(0, -25)
-        #     elif event.key == pg.K_DOWN:
-        #         sprite_snek.update(0, 25)
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_LEFT:
+                sprite_snek.update(-25, 0)
+            elif event.key == pg.K_RIGHT:
+                sprite_snek.update(25, 0)
+            elif event.key == pg.K_UP:
+                sprite_snek.update(0, -25)
+            elif event.key == pg.K_DOWN:
+                sprite_snek.update(0, 25)
+
     for i in sprite_snek:
-        i.update(ra.randint(-5, 5), ra.randint(-5, 5))
+        snek_sees = i.in_vision(sprite_sqrl)
+
+
+    # for i in sprite_snek:
+    #     i.update(ra.randint(-5, 5), ra.randint(-5, 5))
 
     for i in sprite_sqrl:
         i.update(ra.randint(-1, 1), ra.randint(-1, 1))
@@ -53,9 +60,9 @@ while not crashed:
         if len(sprite_sqrl) < sp.SQRL_POP:
             chance = ra.uniform(0, 1)
             if chance <= sp.SQRL_MATE_CHANCE:
-                sqrl = fd.Squirrel(sqrl.rect.x, sqrl.rect.y)
+                sqrl = fd.Squirrel(display, sqrl.rect.x, sqrl.rect.y, sp.SQRL_POP + sqrl_count)
                 sprite_sqrl.add(sqrl)
-                print(len(sprite_sqrl))
+                sqrl_count+=1
 
     for i in sprite_snek:
         if i.rect.x < 0:
@@ -80,8 +87,7 @@ while not crashed:
     sprite_snek.draw(display)
     sprite_sqrl.draw(display)
 
-
-    pg.display.update()
+    pg.display.flip()
     clock.tick(sp.FPS)
 
 pg.quit()

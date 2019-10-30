@@ -9,10 +9,10 @@ ENERGY_TOTAL = 10000
 
 
 class Snake(pg.sprite.Sprite):
-    def __init__(self, behaviors, x, y):
+    def __init__(self, display, behaviors, x, y):
         pg.sprite.Sprite.__init__(self)
         self.behavior_list = behaviors
-        self.size = 1
+        self.size = 5
         self.energy_total = 0
         self.maintenance_budget = ma.floor(min((ENERGY_TOTAL/2 - 1000) + ((ENERGY_TOTAL/70)
                                                                           * (self.size + 1)), ENERGY_TOTAL))
@@ -26,15 +26,41 @@ class Snake(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-
+        self.display = display
+        self.v_range = self.size * 17
+        self.vision = pg.draw.circle(display, sp.BLACK, self.rect.center, self.v_range, 1)
+        self.target = None
+        self.target_id = None
         # print(self.maintenance_budget + self.growth_budget + self.mating_budget + self.storage_budget)
         # print(self.maintenance_budget, self.growth_budget, self.mating_budget, self.storage_budget )
         # print("\n")
+
+    def in_vision(self, sqrl_list):
+        seen = []
+        seen_id = []
+        for i in sqrl_list:
+            distance = ma.hypot(self.rect.x - i.rect.x, self.rect.y-i.rect.y)
+            if distance < self.v_range:
+                seen.append((i.rect.x, i.rect.y))
+                seen_id.append(i.id)
+        if self.target_id in seen_id:
+            ind = seen_id.index(self.target_id)
+            self.target = seen[ind]
+        else:
+            try:
+                self.target = seen[0]
+                self.target_id = seen_id[0]
+            except IndexError:
+                self.target = None
+                self.target_id = None
+        print(self.target_id, self.target)
+        return seen
 
     def eat(self):
         self.energy_total += 1000
 
     def update(self, dx, dy):
+        self.vision = pg.draw.circle(self.display, sp.BLACK, self.rect.center, self.v_range, 1)
         if not self.reproduction_full:
             check = ra.uniform(0, 1)
             if check <= self.move_chance:
