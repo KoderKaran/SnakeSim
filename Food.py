@@ -12,7 +12,7 @@ class Squirrel(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.vision = pg.draw.circle(display, sp.BLACK, self.rect.center, 30, 1)
+        self.vision = pg.draw.circle(display, sp.BLACK, self.rect.center, 50, 1)
         self.id = id
 
     def update(self, v_movement, h_movement):   # v_movement is vertical, h_movement is horizontal

@@ -31,9 +31,6 @@ class Snake(pg.sprite.Sprite):
         self.vision = pg.draw.circle(display, sp.BLACK, self.rect.center, self.v_range, 1)
         self.target = None
         self.target_id = None
-        # print(self.maintenance_budget + self.growth_budget + self.mating_budget + self.storage_budget)
-        # print(self.maintenance_budget, self.growth_budget, self.mating_budget, self.storage_budget )
-        # print("\n")
 
     def in_vision(self, sqrl_list):
         seen = []
@@ -54,13 +51,13 @@ class Snake(pg.sprite.Sprite):
                 self.target = None
                 self.target_id = None
         print(self.target_id, self.target)
-        return seen
 
     def eat(self):
         self.energy_total += 1000
 
     def update(self, dx, dy):
         self.vision = pg.draw.circle(self.display, sp.BLACK, self.rect.center, self.v_range, 1)
+
         if not self.reproduction_full:
             check = ra.uniform(0, 1)
             if check <= self.move_chance:

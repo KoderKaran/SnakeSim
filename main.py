@@ -45,8 +45,8 @@ while not crashed:
         snek_sees = i.in_vision(sprite_sqrl)
 
 
-    # for i in sprite_snek:
-    #     i.update(ra.randint(-5, 5), ra.randint(-5, 5))
+    for i in sprite_snek:
+        i.update(ra.randint(-5, 5), ra.randint(-5, 5))
 
     for i in sprite_sqrl:
         i.update(ra.randint(-1, 1), ra.randint(-1, 1))
