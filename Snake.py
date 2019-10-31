@@ -9,10 +9,11 @@ ENERGY_TOTAL = 10000
 
 
 class Snake(pg.sprite.Sprite):
-    def __init__(self, display, behaviors, x, y):
+    def __init__(self, display, behaviors, x, y, id):
         pg.sprite.Sprite.__init__(self)
         self.behavior_list = behaviors
-        self.size = 3
+        self.size = 1
+        self.growth_rate = .20
         self.speed = 5
         self.energy_total = 0
         self.maintenance_budget = ma.floor(min((ENERGY_TOTAL/2 - 1000) + ((ENERGY_TOTAL/70)
@@ -21,17 +22,18 @@ class Snake(pg.sprite.Sprite):
         self.mating_budget = ma.floor((ENERGY_TOTAL - self.maintenance_budget)/3)
         self.storage_budget = max(ENERGY_TOTAL - (self.maintenance_budget + self.growth_budget + self.mating_budget), 0)
         self.image = sp.SNAKE_IMG
-        self.move_chance = .10
+        self.move_chance = .1
         self.maint_full = False
         self.reproduction_full = False
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.display = display
-        self.v_range = self.size * 17
-        self.vision = pg.draw.circle(display, sp.BLACK, self.rect.center, self.v_range, 1)
+        self.v_range = (self.size * 20) + 30
+        self.vision = pg.draw.circle(display, sp.GREEN, self.rect.center, self.v_range, int(.5))
         self.target = None
         self.target_id = None
+        self.id = id
 
     def in_vision(self, sqrl_list):
         seen = []
@@ -54,6 +56,8 @@ class Snake(pg.sprite.Sprite):
 
     def eat(self):
         self.energy_total += 1000
+        self.size += self.growth_rate
+        self.v_range = ma.floor(self.size * 20) + 30
 
     def update(self, dx, dy):
         self.vision = pg.draw.circle(self.display, sp.BLACK, self.rect.center, self.v_range, 1)

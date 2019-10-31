@@ -17,7 +17,7 @@ crashed = False
 sprite_snek = pg.sprite.Group()
 sprite_sqrl = pg.sprite.Group()
 for i in range(sp.POPULATION_SIZE):
-    snek = sn.Snake(display, ["r"], ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT))
+    snek = sn.Snake(display, ["r"], ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT), i)
     sprite_snek.add(snek)
 
 for i in range(sp.SQRL_POP):
@@ -44,6 +44,8 @@ while not crashed:
     for i in sprite_snek:
         snek_sees = i.in_vision(sprite_sqrl)
 
+    for i in sprite_sqrl:
+        i.in_vision(sprite_snek)
 
     for i in sprite_snek:
         i.update(ra.randint(-1, 1), ra.randint(-1, 1))
