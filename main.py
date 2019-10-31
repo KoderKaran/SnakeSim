@@ -3,6 +3,7 @@ import random as ra
 import Specs as sp
 import Snake as sn
 import Food as fd
+import time as tm
 
 
 pg.init()
@@ -17,15 +18,15 @@ crashed = False
 sprite_snek = pg.sprite.Group()
 sprite_sqrl = pg.sprite.Group()
 for i in range(sp.POPULATION_SIZE):
-    snek = sn.Snake(display, ["r"], ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT), i)
+    snek = sn.Snake(display, ["g", "m", "s", "r"], ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT), i)
     sprite_snek.add(snek)
 
 for i in range(sp.SQRL_POP):
     sqrl = fd.Squirrel(display, ra.randint(0, sp.WIDTH), ra.randint(0, sp.HEIGHT), i)
     sprite_sqrl.add(sqrl)
-
+day = 0
 sqrl_count = 1
-
+start_time = tm.time()
 while not crashed:
     display.fill(sp.GREEN)
     for event in pg.event.get():
@@ -44,11 +45,11 @@ while not crashed:
     for i in sprite_snek:
         snek_sees = i.in_vision(sprite_sqrl)
 
-    for i in sprite_sqrl:
-        i.in_vision(sprite_snek)
+    # for i in sprite_sqrl:
+    #     i.in_vision(sprite_snek)
 
-    for i in sprite_snek:
-        i.update(ra.randint(-1, 1), ra.randint(-1, 1))
+    # for i in sprite_snek:
+    #     i.update(ra.randint(-1, 1), ra.randint(-1, 1))
 
     for i in sprite_sqrl:
         i.update(ra.randint(-1, 1), ra.randint(-1, 1))
@@ -89,7 +90,15 @@ while not crashed:
     sprite_snek.draw(display)
     sprite_sqrl.draw(display)
 
+    if tm.time() - start_time > 30:
+        print("End of day " + str(day))
+        start_time = tm.time()
+        day += 1
+        for i in sprite_snek:
+            i.distrib_energy()
+
     pg.display.flip()
     clock.tick(sp.FPS)
+
 
 pg.quit()

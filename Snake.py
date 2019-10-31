@@ -11,20 +11,26 @@ ENERGY_TOTAL = 10000
 class Snake(pg.sprite.Sprite):
     def __init__(self, display, behaviors, x, y, id):
         pg.sprite.Sprite.__init__(self)
-        self.behavior_list = behaviors
+        self.behavior_list = behaviors #m, g, r, s
         self.size = 1
         self.growth_rate = .20
-        self.speed = 5
+        self.speed = 15
         self.energy_total = 0
         self.maintenance_budget = ma.floor(min((ENERGY_TOTAL/2 - 1000) + ((ENERGY_TOTAL/70)
                                                                           * (self.size + 1)), ENERGY_TOTAL))
         self.growth_budget = ma.floor((self.maintenance_budget/3))
         self.mating_budget = ma.floor((ENERGY_TOTAL - self.maintenance_budget)/3)
         self.storage_budget = max(ENERGY_TOTAL - (self.maintenance_budget + self.growth_budget + self.mating_budget), 0)
+        self.maintenance = 0
+        self.growth = 0
+        self.reproduction = 0
+        self.storage = 0
         self.image = sp.SNAKE_IMG
-        self.move_chance = .1
+        self.move_chance = 1
         self.maint_full = False
         self.reproduction_full = False
+        self.growth_full = False
+        self.storage_full = False
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -34,6 +40,43 @@ class Snake(pg.sprite.Sprite):
         self.target = None
         self.target_id = None
         self.id = id
+
+    def distrib_energy(self):
+        for i in self.behavior_list:
+            if i == "m":
+                if self.energy_total >= self.maintenance_budget:
+                    self.maintenance = self.maintenance_budget
+                    self.maint_full = True
+                else:
+                    self.maint_full = False
+                    self.maintenance = self.energy_total
+                self.energy_total = self.energy_total - self.maintenance
+            if i == "r":
+                if self.energy_total >= self.mating_budget:
+                    self.reproduction = self.mating_budget
+                    self.reproduction_full = True
+                else:
+                    self.reproduction_full = False
+                    self.reproduction = self.energy_total
+                self.energy_total = self.energy_total - self.reproduction
+            if i == "g":
+                if self.energy_total >= self.growth_budget:
+                    self.growth = self.growth_budget
+                    self.growth_full = True
+                else:
+                    self.growth_full = False
+                    self.growth = self.energy_total
+                self.energy_total = self.energy_total - self.growth
+            if i == "s":
+                if self.energy_total >= self.storage_budget:
+                    self.storage = self.storage_budget
+                    self.storage_full = True
+                else:
+                    self.storage_full = False
+                    self.storage = self.energy_total
+                self.energy_total = self.energy_total - self.storage
+        print("Maintenance: " + str(self.maintenance) + " " + str(self.maintenance_budget) + "\nGrowth: " + str(self.growth) + " " + str(self.growth_budget) + "\nReproduction: " +
+              str(self.reproduction) + " " + str(self.mating_budget)  + "\nStorage: " + str(self.storage)+ " " + str(self.storage_budget))
 
     def in_vision(self, sqrl_list):
         seen = []

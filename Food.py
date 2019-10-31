@@ -7,7 +7,7 @@ class Squirrel(pg.sprite.Sprite):
     def __init__(self, display, x, y, id):
         pg.sprite.Sprite.__init__(self)
         self.display = display
-        self.speed = 5
+        self.speed = 0
         self.image = sp.SQRL_IMG
         self.rect = self.image.get_rect()
         self.rect.x = x
