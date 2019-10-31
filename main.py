@@ -33,20 +33,20 @@ while not crashed:
             crashed = True
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_LEFT:
-                sprite_snek.update(-25, 0)
+                sprite_snek.update(-1, 0)
             elif event.key == pg.K_RIGHT:
-                sprite_snek.update(25, 0)
+                sprite_snek.update(1, 0)
             elif event.key == pg.K_UP:
-                sprite_snek.update(0, -25)
+                sprite_snek.update(0, -1)
             elif event.key == pg.K_DOWN:
-                sprite_snek.update(0, 25)
+                sprite_snek.update(0, 1)
 
     for i in sprite_snek:
         snek_sees = i.in_vision(sprite_sqrl)
 
 
     for i in sprite_snek:
-        i.update(ra.randint(-5, 5), ra.randint(-5, 5))
+        i.update(ra.randint(-1, 1), ra.randint(-1, 1))
 
     for i in sprite_sqrl:
         i.update(ra.randint(-1, 1), ra.randint(-1, 1))

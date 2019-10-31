@@ -9,6 +9,6 @@ GREEN = (46, 139, 87)
 SNAKE_IMG = pg.image.load("snek.png")
 SQRL_IMG = pg.image.load("sqrl.png")
 
-POPULATION_SIZE = 10
-SQRL_POP = 10
+POPULATION_SIZE = 20
+SQRL_POP = 50
 SQRL_MATE_CHANCE = .25

@@ -12,7 +12,8 @@ class Snake(pg.sprite.Sprite):
     def __init__(self, display, behaviors, x, y):
         pg.sprite.Sprite.__init__(self)
         self.behavior_list = behaviors
-        self.size = 5
+        self.size = 3
+        self.speed = 5
         self.energy_total = 0
         self.maintenance_budget = ma.floor(min((ENERGY_TOTAL/2 - 1000) + ((ENERGY_TOTAL/70)
                                                                           * (self.size + 1)), ENERGY_TOTAL))
@@ -50,21 +51,37 @@ class Snake(pg.sprite.Sprite):
             except IndexError:
                 self.target = None
                 self.target_id = None
-        print(self.target_id, self.target)
 
     def eat(self):
         self.energy_total += 1000
 
     def update(self, dx, dy):
         self.vision = pg.draw.circle(self.display, sp.BLACK, self.rect.center, self.v_range, 1)
-
-        if not self.reproduction_full:
-            check = ra.uniform(0, 1)
-            if check <= self.move_chance:
+        if self.target is None:
+            if not self.reproduction_full:
+                check = ra.uniform(0, 1)
+                if check <= self.move_chance:
+                    self.move(dx, dy)
+            else:
                 self.move(dx, dy)
         else:
-            self.move(dx, dy)
+            self.chase_prey()
 
-    def move(self, delta_x, delta_y):
-        self.rect.x += delta_x
-        self.rect.y += delta_y
+    def chase_prey(self):
+        dir_x = 0
+        dir_y = 0
+        if self.rect.x < self.target[0]:
+            dir_x = 1.5
+        elif self.rect.x > self.target[0]:
+            dir_x = -1.5
+
+        if self.rect.y < self.target[1]:
+            dir_y = 1.5
+        elif self.rect.y > self.target[1]:
+            dir_y = -1.5
+
+        self.move(dir_x, dir_y)
+
+    def move(self, dir_x, dir_y):
+        self.rect.x += dir_x * self.speed
+        self.rect.y += dir_y * self.speed
