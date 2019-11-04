@@ -11,7 +11,8 @@ ENERGY_TOTAL = 10000
 class Snake(pg.sprite.Sprite):
     def __init__(self, display, behaviors, x, y, id):
         pg.sprite.Sprite.__init__(self)
-        self.behavior_list = behaviors #m, g, r, s
+        self.behavior_list = behaviors
+        print(self.behavior_list)
         self.size = 1
         self.growth_rate = .20
         self.speed = 15
@@ -26,7 +27,7 @@ class Snake(pg.sprite.Sprite):
         self.reproduction = 0
         self.storage = 0
         self.image = sp.SNAKE_IMG
-        self.move_chance = 1
+        self.move_chance = .1
         self.maint_full = False
         self.reproduction_full = False
         self.growth_full = False
