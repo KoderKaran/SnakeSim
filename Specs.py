@@ -1,5 +1,5 @@
 import pygame as pg
-# this whole file is just specs
+# this whole file is just specifications for the window and overall program
 WIDTH, HEIGHT = 1000, 800
 FPS = 15
 BLACK = (0, 0, 0)

@@ -1,10 +1,12 @@
 import pygame as pg
 import Specs as sp
 import math as ma
+# This files code is mainly unimportant to understand as it is just for the squirrels
 
 
 class Squirrel(pg.sprite.Sprite):
     def __init__(self, display, x, y, id):
+        # initializes squirrel
         pg.sprite.Sprite.__init__(self)
         self.display = display
         self.speed = 0
@@ -13,12 +15,13 @@ class Squirrel(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.v_range = 50
-        self.vision = pg.draw.circle(display, sp.BLACK, self.rect.center, self.v_range, 1)
+        self.vision = pg.draw.circle(display, sp.BLACK, self.rect.center, self.v_range, 1)  # Makes the vision circle of the squirrel
         self.id = id
         self.target = None
         self.target_id = None
 
     def in_vision(self, snek_list):
+        # function checks if snake is in circle of vision
         seen = []
         seen_id = []
         for i in snek_list:
@@ -38,6 +41,7 @@ class Squirrel(pg.sprite.Sprite):
                 self.target_id = None
 
     def update(self, dir_x, dir_y):
+        # function checks if squirrel should move regularly or run from snake
         self.vision = pg.draw.circle(self.display, sp.BLACK, self.rect.center, 50, 1)
         if self.target is None:
             self.movement(dir_x, dir_y)
@@ -45,6 +49,7 @@ class Squirrel(pg.sprite.Sprite):
             self.run_away()
 
     def run_away(self):
+        # function to run from snake
         dir_x = 0
         dir_y = 0
         if self.rect.x < self.target[0]:
@@ -59,5 +64,6 @@ class Squirrel(pg.sprite.Sprite):
         self.movement(dir_x, dir_y)
 
     def movement(self, dir_x, dir_y):
+        # function to move randomly
         self.rect.x += self.speed * dir_x
         self.rect.y += self.speed * dir_y
